@@ -1,5 +1,5 @@
-<!-- _sidebar.md -->
-*   [Home](/) <!-- Links to index.md -->
+
+*   [Home](/)
 
 *   **For Quantitative Traders**
     *   [Conceptual Overview (QT)](Concep_QT.md)

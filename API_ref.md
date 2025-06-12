@@ -4,28 +4,28 @@
 
 This document provides an API reference for the `pyquant` library, the Python interface for developing, backtesting, and optimizing trading strategies within the TradeMind platform. It details the core classes, methods, and enumerations available to developers.
 
-For tutorials and usage examples, please refer to the "Developing Your First Trading Strategy with TradeMind" guide.
+For tutorials and usage examples, please refer to the [*Developing Your First Trading Strategy with TradeMind*](First_strat.md) guide.
 
 ## Table of Contents
 
-*   [1. Core Strategy Classes](#1-core-strategy-classes)
-    *   [1.1. `pyquant.Strategy`](#11-pyquantstrategy)
-    *   [1.2. `pyquant.Context`](#12-pyquantcontext)
-*   [2. Enumerations](#2-enumerations)
-    *   [2.1. `pyquant.OrderSide`](#21-pyquantorderside)
-    *   [2.2. `pyquant.OrderType`](#22-pyquantordertype)
-    *   [2.3. `pyquant.Timeframe`](#23-pyquanttimeframe)
-*   [3. Backtesting](#3-backtesting)
-    *   [3.1. `pyquant.BacktestEngine`](#31-pyquantbacktestengine)
-    *   [3.2. `pyquant.BacktestVisualizer`](#32-pyquantbacktestvisualizer)
-*   [4. Optimization](#4-optimization)
-    *   [4.1. `pyquant.StrategyOptimizer`](#41-pyquantstrategyoptimizer)
-*   [5. Data Structures](#5-data-structures)
-    *   [5.1. Position Object](#51-position-object)
-    *   [5.2. Bar Data Format (in \`bar_dict\`)](#52-bar-data-format-in-bar_dict)
-    *   [5.3. OrderTicket Object](#53-orderticket-object)
-    *   [5.4. BacktestResults Object](#54-backtestresults-object)
-    *   [5.5. BestParams Object](#55-bestparams-object)
+*   [1. Core Strategy Classes](#_1-core-strategy-classes)
+    *   [1.1. `pyquant.Strategy`](#_11-pyquantstrategy)
+    *   [1.2. `pyquant.Context`](#_12-pyquantcontext)
+*   [2. Enumerations](#_2-enumerations)
+    *   [2.1. `pyquant.OrderSide`](#_21-pyquantorderside)
+    *   [2.2. `pyquant.OrderType`](#_22-pyquantordertype)
+    *   [2.3. `pyquant.Timeframe`](#_23-pyquanttimeframe)
+*   [3. Backtesting](#_3-backtesting)
+    *   [3.1. `pyquant.BacktestEngine`](#_31-pyquantbacktestengine)
+    *   [3.2. `pyquant.BacktestVisualizer`](#_32-pyquantbacktestvisualizer)
+*   [4. Optimization](#_4-optimization)
+    *   [4.1. `pyquant.StrategyOptimizer`](#_41-pyquantstrategyoptimizer)
+*   [5. Data Structures](#_5-data-structures)
+    *   [5.1. Position Object](#_51-position-object)
+    *   [5.2. Bar Data Format (in \`bar_dict\`)](#_52-bar-data-format-in-bar_dict)
+    *   [5.3. OrderTicket Object](#_53-orderticket-object)
+    *   [5.4. BacktestResults Object](#_54-backtestresults-object)
+    *   [5.5. BestParams Object](#_55-bestparams-object)
 
 ---
 
@@ -58,7 +58,7 @@ The base class for all trading strategies implemented in TradeMind. Users must s
 *   **Description:** Called for each new market data bar received for the symbols the strategy is subscribed to (via `context.symbols` which are typically set based on strategy configuration). This is the primary method for implementing trading logic, signal generation, and order placement.
 *   **Parameters:**
     *   `context` (`Context`): The strategy execution context object, providing access to portfolio information, order functions, and other platform interactions.
-    *   `bar_dict` (`dict`): A dictionary where keys are symbol strings (e.g., "AAPL") and values are the corresponding bar data (typically a pandas DataFrame with OHLCV data). See [Bar Data Format](#52-bar-data-format-in-bar_dict).
+    *   `bar_dict` (`dict`): A dictionary where keys are symbol strings (e.g., "AAPL") and values are the corresponding bar data (typically a pandas DataFrame with OHLCV data). See [Bar Data Format](#_52-bar-data-format-in-bar_dict).
 *   **Returns:** None.
 *   **Example:**
     ```python
@@ -89,7 +89,7 @@ An object provided to strategy methods (`on_bar`, `on_tick`, etc.) that allows t
 *   **Description:** Retrieves the current position information for the specified symbol held by this strategy.
 *   **Parameters:**
     *   `symbol` (`str`): The trading symbol (e.g., "AAPL").
-*   **Returns:** A `Position` object (see [Position Object](#51-position-object)) containing details of the position if one exists, otherwise `None` or a `Position` object with zero quantity.
+*   **Returns:** A `Position` object (see [Position Object](#_51-position-object)) containing details of the position if one exists, otherwise `None` or a `Position` object with zero quantity.
 
 ##### `buy(self, symbol: str, quantity: float, price: float | None = None, order_type: OrderType = OrderType.MARKET, **kwargs) -> OrderTicket | None`
 *   **Description:** Submits a buy order for the specified symbol.
@@ -97,9 +97,9 @@ An object provided to strategy methods (`on_bar`, `on_tick`, etc.) that allows t
     *   `symbol` (`str`): The trading symbol.
     *   `quantity` (`float`): The number of shares/contracts to buy. Must be positive.
     *   `price` (`float | None`, optional): The limit price for `OrderType.LIMIT` or `OrderType.STOP_LIMIT` orders. Defaults to `None` for market orders.
-    *   `order_type` (`OrderType`, optional): The type of order to place. Defaults to `OrderType.MARKET`. See [OrderType](#22-pyquantordertype).
+    *   `order_type` (`OrderType`, optional): The type of order to place. Defaults to `OrderType.MARKET`. See [OrderType](#_22-pyquantordertype).
     *   `**kwargs`: Additional order parameters (e.g., `time_in_force: str`, `stop_price: float` for stop orders).
-*   **Returns:** An `OrderTicket` object (see [OrderTicket Object](#53-orderticket-object)) representing the submitted order, or `None` if submission failed.
+*   **Returns:** An `OrderTicket` object (see [OrderTicket Object](#_53-orderticket-object)) representing the submitted order, or `None` if submission failed.
 
 ##### `sell(self, symbol: str, quantity: float, price: float | None = None, order_type: OrderType = OrderType.MARKET, **kwargs) -> OrderTicket | None`
 *   **Description:** Submits a sell order for the specified symbol. Can be used to close a long position or open a short position (if supported).
@@ -194,7 +194,7 @@ Class used to run historical backtests of strategies.
 *   **Parameters:**
     *   `symbol` (`str`): The symbol for which the data is being added.
     *   `timeframe` (`Timeframe`): The timeframe of the bar data.
-    *   `data` (`pd.DataFrame`): A pandas DataFrame. See [Bar Data Format](#52-bar-data-format-in-bar_dict).
+    *   `data` (`pd.DataFrame`): A pandas DataFrame. See [Bar Data Format](#_52-bar-data-format-in-bar_dict).
     *   `data_name` (`str | None`, optional): A name for this data feed, if needed.
 *   **Returns:** None.
 
@@ -205,7 +205,7 @@ Class used to run historical backtests of strategies.
     *   `end_time`: The end datetime for the backtest period.
     *   `initial_capital` (`float | None`, optional): Overrides `initial_capital` from `__init__` if provided.
     *   `**kwargs`: Other backtest execution parameters.
-*   **Returns:** `BacktestResults` object. See [BacktestResults Object](#54-backtestresults-object).
+*   **Returns:** `BacktestResults` object. See [BacktestResults Object](#_54-backtestresults-object).
 
 ### 3.2. `pyquant.BacktestVisualizer`
 Class used to generate reports or plots from backtest results.
@@ -254,7 +254,7 @@ Class used to perform parameter optimization for strategies by running multiple 
     *   `optimize_metric` (`str`): Name of the performance metric to optimize (e.g., `'sharpe_ratio'`, `'total_return'`, `'max_drawdown'`).
     *   `higher_is_better` (`bool`, optional): Whether a higher value of `optimize_metric` is better. Default: `True`.
     *   `**kwargs`: Additional parameters for each backtest run.
-*   **Returns:** `BestParams` object. See [BestParams Object](#55-bestparams-object).
+*   **Returns:** `BestParams` object. See [BestParams Object](#_55-bestparams-object).
 
 ---
 
