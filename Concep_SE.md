@@ -2,7 +2,7 @@
 
 ## Audience
 
-This document is intended for Trading System Engineers, DevOps personnel, and System Administrators responsible for building, deploying, configuring, and monitoring the TradeMind algorithmic trading platform. It assumes you possess strong technical skills, including proficiency in C++ and Python, experience with low-latency systems, distributed architectures (like microservices), networking concepts (including FIX protocol familiarity), containerization (Docker), orchestration (Kubernetes), and Linux/Unix system administration.
+This document is intended for Trading System Engineers, DevOps personnel, and System Administrators responsible for building, deploying, configuring, and monitoring the TradeMind algorithmic trading platform. It assumes you possess strong technical skills, including proficiency in C++ and Python, and have experience with low-latency systems, distributed architectures (like microservices), networking concepts (including FIX protocol familiarity), containerization (Docker), orchestration (Kubernetes), and Linux/Unix system administration.
 
 ## Scope
 
@@ -18,19 +18,19 @@ This document will cover the following topics:
 
 ## What is TradeMind?
 
-TradeMind is a high-performance, distributed algorithmic trading platform designed for low-latency execution and sophisticated strategy support. From an engineering perspective, its key characteristic is a hybrid architecture:
+TradeMind is a high-performance, distributed algorithmic trading platform designed for low-latency execution and sophisticated strategy support. From an engineering perspective, its key characteristic is a hybrid architecture made of the following components:
 
-*   A **high-performance core engine built in C++** handles time-critical operations like order book management, order routing, risk checks, and connectivity to exchanges via protocols like FIX. This ensures microsecond-level processing capabilities.
+*   A **high-performance core engine built in C++** handles time-critical operations like order book management, order routing, risk checks, and connectivity to exchanges via protocols like FIX ensuring microsecond-level processing capabilities.
 *   A **flexible Python layer** provides the interface for quantitative traders to develop, test, and run their trading strategies. This layer interacts with the C++ core for execution and data.
 *   A **distributed, microservices-based infrastructure** leveraging technologies like ZeroMQ, Docker, and Kubernetes allows for scalability, resilience, and flexible deployment across various environments (on-premises or cloud).
 
-Your primary focus as a System Engineer will be on the C++ core, the distributed infrastructure, the connectivity layer, and ensuring the robust operation and interaction of all components.
+As a System Engineer you will primarily be working with the C++ core and the distributed infrastructure.
 
 ## TradeMind Architecture
 
 ![TradeMind Architecture Visualization](./imgs/architecture.png)
 
-Understanding how the following layers/components interact will be crucial for deployment and troubleshooting:
+Understanding how the following layers interact will be crucial for deployment and troubleshooting:
 
 ### 1. Exchanges and Data Sources Layer (External)
 *   **Function:** Provides the raw market data (quotes, trades) and serves as the destination for orders.
@@ -68,29 +68,82 @@ Understanding how the following layers/components interact will be crucial for d
     *   **Monitoring & Recovery:** Tools for logging, metrics collection, and potentially automated failover mechanisms.
 *   **Relevance:** You will manage Dockerfiles, Kubernetes manifests, configure message queues, set up monitoring/alerting, and troubleshoot infrastructure-level issues.
 
-### Typical Data Flow Summary
-Typically, market data flows from Exchanges -> Connectivity Layer -> Core Engine. The Core Engine may feed data to the Python Strategy Layer. Strategy signals flow from Python -> Core Engine. Orders flow from Core Engine -> Connectivity Layer -> Exchanges. System metrics and logs are generated across layers and aggregated by monitoring tools within the Distributed Infrastructure.
-
 ## Key Concepts
+
+To effectively manage and operate the TradeMind platform, it's essential to understand its core components and underlying technologies. The concepts below are grouped by their functional area or role within the system, providing a structured overview:
+
+#### 1. Development, Build, and Configuration
+
+These are foundational elements for setting up and customizing the platform.
 
 *   **Build Process:** If building the platform from source, you will need to compile the C++ Core Engine and potentially other native components using CMake and a C++17 compatible compiler. (The [*TradeMind Setup Guide*](Setup_guide.md) provides a manual build process which can be adapted for automated builds).
 *   **Configuration Files:** Primarily YAML files (e.g., `config/config.yaml`) controlling aspects like exchange connections (FIX parameters), data source details, risk limits, logging levels, performance tuning parameters (e.g., thread affinities), and message queue endpoints. Details are in the [*TradeMind Configuration Guide*](Config_guide.md).
-*   **FIX Engine:** The component managing Financial Information Exchange protocol sessions. Requires specific configuration per counterparty. Understanding session states (logon, heartbeat, logout) is important for troubleshooting connectivity.
-*   **ZeroMQ:** The high-performance asynchronous messaging library used for inter-service communication. Understanding its patterns (Pub/Sub, Req/Rep) helps in diagnosing communication bottlenecks or failures.
-*   **Docker & Kubernetes:** Standard tools for containerization and orchestration, used for packaging, deploying, scaling, and managing the TradeMind microservices. Familiarity with `docker build`, `docker-compose`, `kubectl`, and related manifest files is essential.
-*   **Market Data Adapters:** Pluggable components for specific data feeds. May require separate configuration or deployment depending on the data sources used.
+
+#### 2. Core Trading Engine Components
+
+These components form the heart of the trading logic and order handling.
+
 *   **Order Management System (OMS):** The part of the Core Engine responsible for tracking the state of orders (New, Filled, Canceled, Rejected) throughout their lifecycle.
+
+#### 3. Connectivity and Data Handling
+
+These elements manage how TradeMind interacts with external financial systems and data feeds.
+
+*   **FIX Engine:** The component managing Financial Information Exchange (FIX) protocol sessions with exchanges or brokers. Requires specific configuration per counterparty (e.g., SenderCompID, TargetCompID, IP, port). Understanding session states (logon, heartbeat, logout) is important for troubleshooting connectivity.
+*   **Market Data Adapters:** Pluggable components designed to interface with specific market data feeds (e.g., from different exchanges or vendors). They parse incoming data into a standardized internal format used by the Core Engine. May require separate configuration or deployment depending on the data sources used.
+
+#### 4. Infrastructure and Inter-Service Communication
+
+These are the underlying technologies that enable the distributed and microservices-based nature of the platform.
+
+*   **ZeroMQ:** The high-performance asynchronous messaging library used for low-latency, high-throughput inter-process communication between different microservices (e.g., C++ Core <-> Python Strategy Layer, Data Adapter <-> Core Engine). Understanding its patterns (Pub/Sub, Req/Rep) helps in diagnosing communication bottlenecks or failures.
+
+#### 5. Deployment and Orchestration
+
+These tools are standard for packaging, deploying, scaling, and managing the TradeMind microservices in various environments.
+
+*   **Docker & Kubernetes:**
+    *   **Docker:** Used for containerizing the various components (Core Engine, Python services, connectivity adapters, etc.) for consistent deployment and dependency management.
+    *   **Kubernetes:** Used for orchestrating container deployment, scaling, managing the lifecycle of TradeMind services in a cluster, and enabling features like service discovery and automated rollouts/rollbacks.
+    Familiarity with `docker build`, `docker-compose` (for local development), `kubectl`, and related manifest files (like Deployments, Services, ConfigMaps) is essential for managing production-like environments.
 
 ## Strategy Deployment Workflow (System Engineer Perspective)
 
-Your typical workflow using TradeMind will likely follow some combination of these steps:
+As a System Engineer, your typical workflow for deploying and managing trading strategies within the TradeMind platform involves a sequence of operations that touch various parts of its architecture. Understanding how these steps relate to the [TradeMind Architecture](#trademind-architecture) will be crucial for effective management:
 
-1.  **Build/Compile:** Obtain the source code and compile the C++ Core Engine and any other necessary binaries using CMake and required compilers/libraries, often as part of an automated CI/CD pipeline.
-2.  **Configure:** Set up the `config.yaml` and potentially other configuration files with environment-specific details (exchange IPs/ports, data feed credentials, risk parameters, resource allocations), possibly using configuration management tools.
-3.  **Deploy:** Deploy the containerized (Docker) or bare-metal components onto the target servers or Kubernetes cluster. This includes the C++ Core, Python Strategy execution environments, connectivity adapters, and any analysis/visualization tools.
-4.  **Connect & Test:** Establish and verify connectivity to exchanges (FIX sessions) and data providers. Run initial system health checks and integration tests.
-5.  **Monitor:** Continuously monitor system health, performance metrics (latency, throughput, resource usage), logs, and network connectivity using configured monitoring tools (e.g., Prometheus, Grafana, ELK stack). Set up alerting for critical issues.
-6.  **Maintain:** Perform regular maintenance, apply updates/patches, troubleshoot issues (connectivity drops, performance degradation, crashes), and potentially scale resources based on load. Implement backup and recovery procedures.
+1.  **Build/Compile:**
+    *   **Architectural Focus:** Primarily the **Core Engine Layer (C++)**.
+    *   **Actions:** Obtain the source code and compile the C++ Core Engine (which includes the Order Management System, Strategy Execution Engine, and Real-time Risk Management modules) and any other necessary native binaries (e.g., custom Market Data Adapters from the **Trading and Data Connectivity Layer**). This process uses CMake and required compilers/libraries, often as part of an automated CI/CD pipeline. You will also ensure the Python environment for the **Strategy Development Layer** is correctly packaged or prepared for deployment.
+
+2.  **Configure:**
+    *   **Architectural Focus:** Affects multiple layers including **Trading and Data Connectivity Layer**, **Core Engine Layer**, **Strategy Development Layer**, and **Distributed Infrastructure Layer**.
+    *   **Actions:** Set up the `config.yaml` (as detailed in the [*TradeMind Configuration Guide*](Config_guide.md)) and potentially other configuration files. This includes:
+        *   Defining connections for the **Trading and Data Connectivity Layer** (e.g., FIX Engine parameters for exchanges, endpoints for Market Data Adapters).
+        *   Setting operational parameters for the **Core Engine Layer** (e.g., risk limits, logging verbosity).
+        *   Configuring how strategies from the **Strategy Development Layer** are loaded and managed.
+        *   Defining settings for the **Distributed Infrastructure Layer** (e.g., ZeroMQ message bus endpoints).
+        This is often done with environment-specific details (IPs/ports, credentials, resource allocations), possibly using configuration management tools.
+
+3.  **Deploy:**
+    *   **Architectural Focus:** Involves deploying components from the **Core Engine Layer**, **Strategy Development Layer**, **Trading and Data Connectivity Layer**, and potentially the **Analysis & Visualization Layer**, all managed through the **Distributed Infrastructure Layer**.
+    *   **Actions:** Deploy the containerized (Docker) or bare-metal components onto the target servers or Kubernetes cluster. This includes:
+        *   The compiled C++ **Core Engine**.
+        *   Python execution environments/services for the **Strategy Development Layer**.
+        *   Deployed Market Data Adapters and FIX Engines from the **Trading and Data Connectivity Layer**.
+        *   Any associated **Analysis & Visualization tools**.
+        The **Distributed Infrastructure Layer** (Docker, Kubernetes) is critical here for packaging, orchestration, and scaling.
+
+4.  **Connect & Test:**
+    *   **Architectural Focus:** Primarily the **Trading and Data Connectivity Layer** and its interaction with **External Exchanges and Data Sources**, and the **Core Engine Layer**.
+    *   **Actions:** Establish and verify connectivity of the **Trading and Data Connectivity Layer** to exchanges (e.g., FIX sessions logon successfully) and data providers. This involves ensuring Market Data Adapters are receiving and parsing data correctly. Run initial system health checks and integration tests to confirm data flows correctly to the **Core Engine Layer** and that it can process orders.
+
+5.  **Monitor:**
+    *   **Architectural Focus:** Utilizes tools within the **Distributed Infrastructure Layer** to observe all active layers of the TradeMind platform.
+    *   **Actions:** Continuously monitor system health, performance metrics (latency, throughput, resource usage of the **Core Engine Layer**, message rates on ZeroMQ), logs (from all components), and network connectivity of the **Trading and Data Connectivity Layer**. This uses configured monitoring tools (e.g., Prometheus, Grafana, ELK stack), often integrated into the **Distributed Infrastructure Layer**. Set up alerting for critical issues detected in any part of the architecture.
+
+6.  **Maintain:**
+    *   **Architectural Focus:** Encompasses all deployed architectural layers.
+    *   **Actions:** Perform regular maintenance on all components. This includes applying updates/patches to the **Core Engine Layer**, Python environments in the **Strategy Development Layer**, or the underlying **Distributed Infrastructure Layer** (e.g., Kubernetes, OS). Troubleshoot issues such as connectivity drops in the **Trading and Data Connectivity Layer**, performance degradation in the **Core Engine**, or crashes in any service. Scale resources within the **Distributed Infrastructure Layer** based on load. Implement and test backup and recovery procedures for critical data and configurations.
 
 ## Tools and Environment
 
