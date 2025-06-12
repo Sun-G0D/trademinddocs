@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TradeMind Documentation</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="TradeMind Algorithmic Trading Platform Documentation">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <!-- Theme: Feel free to change this to other available themes -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+</head>
+<body>
+  <div id="app">Loading...</div> <!-- Docsify will render content here -->
+  <script>
+    window.$docsify = {
+      name: 'TradeMind Docs', // Name to display in the sidebar
+      repo: '', // Optional: GitHub repository URL (e.g., 'yourusername/your-repo')
+      loadSidebar: true, // Tells Docsify to look for _sidebar.md
+      subMaxLevel: 2,    // How many heading levels to show in the auto-generated ToC on the right
+      homepage: 'README.md', // Sets your landing page (created in previous step)
+      alias: {
+        '/.*/_sidebar.md': '/_sidebar.md' // Ensures sidebar loads correctly on all pages
+      }
+    }
+  </script>
+  <!-- Docsify core script -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+</body>
+</html>
