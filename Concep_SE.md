@@ -35,7 +35,7 @@ Understanding how the following layers/components interact will be crucial for d
 
 ### 1. Exchanges and Data Sources Layer (External)
 *   **Function:** Provides the raw market data (quotes, trades) and serves as the destination for orders.
-*   **Relevance:** You will likely need to configure TradeMind's connectivity to these specific exchanges and data feeds if not using proprietary data sources. This involves parameters detailed in the *TradeMind Configuration Guide*.
+*   **Relevance:** You will likely need to configure TradeMind's connectivity to these specific exchanges and data feeds if not using proprietary data sources. This involves parameters detailed in the [*TradeMind Configuration Guide*](Config_guide.md).
 
 ### 2. Trading and Data Connectivity Layer
 *   **Function:** Manages communication between the TradeMind Core Engine and the external exchanges/data sources.
@@ -43,17 +43,17 @@ Understanding how the following layers/components interact will be crucial for d
     *   **FIX Engine:** Manages persistent sessions with exchanges using the FIX protocol for order entry and market data. Requires careful configuration (Session IDs, IPs, ports).
     *   **WebSocket APIs:** Used for connecting to more modern data feeds or potentially custom interfaces.
     *   **Market Data Adapters:** Specific modules responsible for parsing data from different vendor formats or exchange protocols into a standardized internal format.
-*   **Relevance:** This is a key configuration and monitoring point. Careful adapter setup, FIX session stability, and efficient data flow are critical for system reliability. Configuration details are found in the *TradeMind Configuration Guide*.
+*   **Relevance:** This is a key configuration and monitoring point. Careful adapter setup, FIX session stability, and efficient data flow are critical for system reliability. Configuration details are found in the [*TradeMind Configuration Guide*](Config_guide.md).
 
 ### 3. Core Engine Layer (C++)
 *   **Function:** Processes market data, manages order lifecycle, executes strategy logic (delegated from Python), and performs real-time risk management.
 *   **Key Components:** Order Book Engine, Order Management System (OMS), Strategy Execution Engine (hosting/calling strategy logic), Real-time Risk Management module.
-*   **Relevance:** This is the core C++ application you will build (see *TradeMind Setup Guide* for Quantitative Traders as a reference, though system-level builds might involve CI/CD), configure (performance tuning, logging via *TradeMind Configuration Guide*), and monitor closely for CPU usage, memory, and latency metrics.
+*   **Relevance:** This is the core C++ application you will build (see [*TradeMind Setup Guide*](Setup_guide.md) for Quantitative Traders as a reference, though system-level builds might involve CI/CD), configure (performance tuning, logging via [*TradeMind Configuration Guide*](Config_guide.md)), and monitor closely for CPU usage, memory, and latency metrics.
 
 ### 4. Strategy Development Layer (Python)
 *   **Function:** Provides the environment for quantitative traders to write and test strategies. Interfaces with the Core Engine for data and execution commands.
 *   **Key Components:** Python API, Backtesting Engine.
-*   **Relevance:** While you might not be developing strategies, you will need to ensure the Python environment is correctly set up (referencing the *TradeMind Setup Guide* for base Python environment), dependencies are installed, and that Python processes can communicate effectively (e.g., via ZeroMQ) with the C++ Core Engine. You'll manage the deployment of this layer alongside the core.
+*   **Relevance:** While you might not be developing strategies, you will need to ensure the Python environment is correctly set up (referencing the [*TradeMind Setup Guide*](Setup_guide.md) for base Python environment), dependencies are installed, and that Python processes can communicate effectively (e.g., via ZeroMQ) with the C++ Core Engine. You'll manage the deployment of this layer alongside the core.
 
 ### 5. Analysis & Visualization Layer
 *   **Function:** Provides tools for analyzing trading performance and visualizing system/market data.
@@ -67,18 +67,18 @@ Understanding how the following layers/components interact will be crucial for d
     *   **Docker:** Used for containerizing the various components (Core Engine, Python services, etc.) for consistent deployment.
     *   **Kubernetes:** Used for orchestrating container deployment, scaling, and managing the lifecycle of TradeMind services in a cluster.
     *   **Monitoring & Recovery:** Tools for logging, metrics collection, and potentially automated failover mechanisms.
-*   **Relevance:** You will manage Dockerfiles, Kubernetes manifests, configure message queues (see *TradeMind Configuration Guide* for `message_bus`), set up monitoring/alerting, and troubleshoot infrastructure-level issues.
+*   **Relevance:** You will manage Dockerfiles, Kubernetes manifests, configure message queues (see [*TradeMind Configuration Guide*](Config_guide.md) for `message_bus`), set up monitoring/alerting, and troubleshoot infrastructure-level issues.
 
 ### Typical Data Flow Summary
 Typically, market data flows from Exchanges -> Connectivity Layer -> Core Engine. The Core Engine may feed data to the Python Strategy Layer. Strategy signals flow from Python -> Core Engine. Orders flow from Core Engine -> Connectivity Layer -> Exchanges. System metrics and logs are generated across layers and aggregated by monitoring tools within the Distributed Infrastructure.
 
 ## Key Concepts
 
-*   **Build Process:** If building the platform from source, you will need to compile the C++ Core Engine and potentially other native components using CMake and a C++17 compatible compiler. (The *TradeMind Setup Guide for Quantitative Traders* provides a manual build process which can be adapted for automated builds).
-*   **Configuration Files:** Primarily YAML files (e.g., `config/config.yaml`) controlling aspects like exchange connections (FIX parameters), data source details, risk limits, logging levels, performance tuning parameters (e.g., thread affinities), and message queue endpoints. Details are in the *TradeMind Configuration Guide*.
+*   **Build Process:** If building the platform from source, you will need to compile the C++ Core Engine and potentially other native components using CMake and a C++17 compatible compiler. (The [*TradeMind Setup Guide*](Setup_guide.md) provides a manual build process which can be adapted for automated builds).
+*   **Configuration Files:** Primarily YAML files (e.g., `config/config.yaml`) controlling aspects like exchange connections (FIX parameters), data source details, risk limits, logging levels, performance tuning parameters (e.g., thread affinities), and message queue endpoints. Details are in the [*TradeMind Configuration Guide*](Config_guide.md).
 *   **FIX Engine:** The component managing Financial Information Exchange protocol sessions. Requires specific configuration per counterparty. Understanding session states (logon, heartbeat, logout) is important for troubleshooting connectivity.
 *   **ZeroMQ:** The high-performance asynchronous messaging library used for inter-service communication. Understanding its patterns (Pub/Sub, Req/Rep) helps in diagnosing communication bottlenecks or failures.
-*   **Docker & Kubernetes:** Standard tools for containerization and orchestration, used for packaging, deploying, scaling, and managing the TradeMind microservices. Familiarity with `docker build`, `docker-compose`, `kubectl`, and related manifest files is essential. The *TradeMind Configuration Guide* touches on containerized environments.
+*   **Docker & Kubernetes:** Standard tools for containerization and orchestration, used for packaging, deploying, scaling, and managing the TradeMind microservices. Familiarity with `docker build`, `docker-compose`, `kubectl`, and related manifest files is essential. The [*TradeMind Configuration Guide*](Config_guide.md) touches on containerized environments.
 *   **Market Data Adapters:** Pluggable components for specific data feeds. May require separate configuration or deployment depending on the data sources used.
 *   **Order Management System (OMS):** The part of the Core Engine responsible for tracking the state of orders (New, Filled, Canceled, Rejected) throughout their lifecycle.
 
@@ -106,6 +106,6 @@ Setting up and managing the TradeMind platform requires the following dependenci
 *   **Monitoring & Logging:** (e.g., Prometheus, Grafana, ELK Stack)
 *   **Standard Sysadmin Tools:** `git`, network diagnostic tools (`ping`, `traceroute`, `netstat`), scripting languages (Bash, Python), performance analysis tools.
 
-## Conclusion
+## Next Steps
 
-This conceptual overview should equip you with a foundational understanding of the TradeMind platform's architecture and operational considerations from a systems perspective. Your next steps would typically involve consulting detailed documentation on building the software from source (or setting up build pipelines), understanding the specific configuration parameters in the *TradeMind Configuration Guide*, and following the recommended deployment procedures for your target environment (Docker, Kubernetes, or bare-metal).
+This conceptual overview should equip you with a foundational understanding of the TradeMind platform's architecture and operational considerations from a systems perspective. Your next steps would typically involve consulting detailed documentation on building the software from source (or setting up build pipelines), understanding the specific configuration parameters in the [*TradeMind Configuration Guide*](Config_guide.md), and following the recommended deployment procedures for your target environment (Docker, Kubernetes, or bare-metal).
