@@ -29,6 +29,8 @@ Your primary focus as a System Engineer will be on the C++ core, the distributed
 
 ## TradeMind Architecture
 
+![TradeMind Architecture Visualization](./imgs/architecture.png)
+
 Understanding how the following layers/components interact will be crucial for deployment and troubleshooting:
 
 ### 1. Exchanges and Data Sources Layer (External)
