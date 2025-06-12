@@ -74,11 +74,10 @@ Your typical workflow using TradeMind will likely follow some combination of the
 Before developing strategies with TradeMind, you will need to setup the following:
 
 *   **Python Environment**: A working Python (3.8+) installation with standard data science libraries (like pandas, numpy) often being helpful.
-*   **TradeMind Python Package**: You'll need to correctly install and set up the TradeMind environment. Details on building the C++ core and setting up the Python package can be found in the *TradeMind Setup Guide*. For conceptual details on how Python interacts with C++ for strategy deployment, quantitative traders can refer to the *Conceptual Overview for System Engineers*.
+*   **TradeMind Python Package**: You'll need to correctly install and set up the TradeMind environment. For conceptual details on how Python interacts with C++ for strategy deployment, quantitative traders can refer to the [*Conceptual Overview for System Engineers*](Concep_SE.md).
 *   **Standard Development Tools**: A code editor (like VS Code or PyCharm) and version control (like Git) are essential for managing your strategy code.
 *   **C++ Compilers/Related Libraries**: Unless you are contributing to the core platform itself or need to build it from the source initially, you typically won't need C++ compilers or related libraries.
 
 ## Conclusion
 
-This overview should provide you with the foundational understanding needed to start exploring TradeMind's capabilities for quantitative strategy development. Your next steps would likely involve setting up your environment (see the *TradeMind Setup Guide*) and working through tutorials focused on writing your first strategy, loading data, and running a backtest. Good luck!
-```
+This overview should provide you with the foundational understanding needed to start exploring TradeMind's capabilities for quantitative strategy development. Your next steps would likely involve setting up your environment (see the [*TradeMind Setup Guide*](Setup_guide.md)) and working through tutorials focused on writing your first strategy, loading data, and running a backtest. Good luck!

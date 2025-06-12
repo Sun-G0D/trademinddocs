@@ -29,6 +29,8 @@ TradeMind's C++ components on Windows are best built with the MSVC compiler.
         *   MSVC v143 VS 2022 C++ x64/x86 build tools (or latest compatible version for C++17)
         *   Windows SDK (e.g., Windows 11 SDK or a recent Windows 10 SDK)
         *   C++ CMake tools for Windows
+
+    ![Options to check for VS Install](imgs\cmake_windows_install.png)
     *   Click "Install".
 3.  **Option B (If you want the full IDE):**
     *   Download "Visual Studio Community 2022" (or another version).
@@ -176,7 +178,8 @@ With all prerequisites and the Fix8 library prepared, you can now clone and buil
         *   Open your `trademind` project folder in VS Code.
         *   Ensure your MSVC Kit is selected (as per step I.6).
         *   VS Code's CMake Tools extension should prompt to configure. If not, trigger it: Press Ctrl+Shift+P, type "CMake: Configure", and select it.
-        *   Review the CMake output in the "Output" panel (select "CMake" from the dropdown). It should find all dependencies (Boost, ZeroMQ, YAML-CPP, Poco, TBB, Fix8). You should see messages like "Configuring done" and "Generating done". Build files are typically placed in a `build` subdirectory within `trademind`.
+        *   Review the CMake output in the "Output" panel (select "CMake" from the dropdown). It should find all dependencies (Boost, ZeroMQ, YAML-CPP, Poco, TBB, Fix8). You should see messages like "Configuring done" and "Generating done". Build files are typically placed in a `build` subdirectory within `trademind`. Provided below is an example of a successful configuration:
+        ![image of a successful configuration](./imgs/image.png)
 
     *   **Using Command Line (Alternative):**
         *   Open a Developer Command Prompt for VS (e.g., "x64 Native Tools Command Prompt for VS 2022").
@@ -196,6 +199,7 @@ With all prerequisites and the Fix8 library prepared, you can now clone and buil
 
     *   **Using VS Code:**
         *   Click the "Build" button in the status bar (often looks like a cog or simply says "[Build]").
+        ![image showing location of build button on the bottom right of the screen](imgs\build_button.png)
         *   Alternatively, press Ctrl+Shift+P, type "CMake: Build", and select it. Choose the desired configuration (e.g., Debug or Release).
 
     *   **Using Command Line (if configured via command line):**
@@ -207,6 +211,7 @@ With all prerequisites and the Fix8 library prepared, you can now clone and buil
             (Or `--config Debug` for a debug build).
 
     This will compile the project. The executable (`trademind.exe`) will be placed in a subdirectory of your build folder (e.g., `trademind/build/bin/Release/`). Successful builds usually end with a message indicating completion with exit code 0.
+    ![image of a successful build](imgs/successful_build.png)
 
 You have now successfully built the C++ components for TradeMind.
 
@@ -252,6 +257,7 @@ Your Python environment is now prepared for TradeMind strategy development.
 
 With the development environment set up and core components built, you can proceed to:
 
-*   Understanding TradeMind configuration files (refer to the *TradeMind Configuration Guide*).
+*   Understanding TradeMind configuration files (refer to the [*TradeMind Configuration Guide*](Config_guide.md)).
 *   Running the TradeMind platform.
-*   Developing your first trading strategy (refer to the *Developing Your First Trading Strategy with TradeMind* tutorial and the *TradeMind Python API Reference*).
+*   Developing your first trading strategy (refer to [*Developing Your First Trading Strategy with TradeMind*](First_strat.md)
+ tutorial and [*TradeMind Python API Reference*](API_ref.md)).

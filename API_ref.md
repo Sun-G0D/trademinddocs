@@ -22,7 +22,7 @@ For tutorials and usage examples, please refer to the "Developing Your First Tra
     *   [4.1. `pyquant.StrategyOptimizer`](#41-pyquantstrategyoptimizer)
 *   [5. Data Structures](#5-data-structures)
     *   [5.1. Position Object](#51-position-object)
-    *   [5.2. Bar Data Format (in `bar_dict`)](#52-bar-data-format-in-bar_dict)
+    *   [5.2. Bar Data Format (in \`bar_dict\`)](#52-bar-data-format-in-bar_dict)
     *   [5.3. OrderTicket Object](#53-orderticket-object)
     *   [5.4. BacktestResults Object](#54-backtestresults-object)
     *   [5.5. BestParams Object](#55-bestparams-object)

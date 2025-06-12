@@ -2,7 +2,7 @@
 
 Welcome to the official documentation for TradeMind, a high-performance algorithmic trading platform. This documentation set provides comprehensive information for both Quantitative Traders looking to develop and backtest strategies, and System Engineers responsible for deploying and managing the platform.
 
-Navigate through the sections below to find the information you need. All documents are linked together here to help you find relevant content easily.
+Navigate through the sections below to find the information you need.
 
 ## For Quantitative Traders
 
