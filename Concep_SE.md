@@ -1,5 +1,4 @@
 # TradeMind Conceptual Overview
-## For System Engineers
 
 ## Audience
 
